@@ -1,8 +1,5 @@
 import subprocess, os
 
-root=r'X:\python\snow\decrypted\Game\Content'
-dirlist = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
-
 targetdirs = ["Startup", "UI", "Spine"]
 
 for dir in targetdirs:

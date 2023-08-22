@@ -1,16 +1,18 @@
-import os, shutil, filecmp
+import os, shutil, filecmp, sys
 from datetime import datetime
 
-settings_files_path = r"X:\python\snow\decrypted\Game\Content\Settings"
-movies_files_path = r"X:\python\snow\decrypted\Game\Content\Movies"
+script_dir = sys.argv[1]
 
-dir_path = r"X:\python\snow\extracted"
+settings_files_path = fr"{script_dir}\decrypted\Game\Content\Settings"
+movies_files_path = fr"{script_dir}\decrypted\Game\Content\Movies"
+
+dir_path = fr"{script_dir}\extracted"
 
 date_dir_timestamp = datetime.today().strftime('%Y-%m-%d')
 
-target_dir = r"X:\python\snow\extracted\_new\_single"
-special_target_dir = r"X:\python\snow\extracted\_new\_special"
-movies_target_dir = r"X:\python\snow\extracted\_new\_movies"
+target_dir = fr"{script_dir}\extracted\_new\_single"
+special_target_dir = fr"{script_dir}\extracted\_new\_special"
+movies_target_dir = fr"{script_dir}\extracted\_new\_movies"
 
 directories = [target_dir, special_target_dir, movies_target_dir]
 print("Moving previous new folders to consolidated...")
@@ -49,8 +51,10 @@ for (dir_path, dir_names, file_names) in os.walk(dir_path):
                 safety_prefix = "_".join(dir_path.split("\\")[5:]) + "_"
                 target_absolute_path = f"{safety_prefix}{file}"
                 if any([match in target_absolute_path for match in marked_file_contents]):
+                    #print(fr"Moving {dir_path}\{file} ==> {special_target_dir}\{date_dir_timestamp}\{target_absolute_path}")
                     shutil.move(fr"{dir_path}\{file}", fr"{special_target_dir}\{date_dir_timestamp}\{target_absolute_path}")
                 else:
+                    #print(fr"Moving {dir_path}\{file} ==> {target_dir}\{date_dir_timestamp}\{target_absolute_path}")
                     shutil.move(fr"{dir_path}\{file}", fr"{target_dir}\{date_dir_timestamp}\{target_absolute_path}")
                 
 for (dir_path, dir_names, file_names) in os.walk(settings_files_path):
@@ -58,13 +62,16 @@ for (dir_path, dir_names, file_names) in os.walk(settings_files_path):
         if "gacha" in file and "txt" in file:
             safety_prefix = "_".join(dir_path.split("\\")[5:]) + "_"
             target_absolute_path = f"{safety_prefix}{file}"
+            #print(fr"Moving {dir_path}\{file} ==> {special_target_dir}\{date_dir_timestamp}\{target_absolute_path}")
             shutil.move(fr"{dir_path}\{file}", fr"{special_target_dir}\{date_dir_timestamp}\{target_absolute_path}")
                 
 for (dir_path, dir_names, file_names) in os.walk(movies_files_path):
     for file in file_names:
+        #print(file)
         if "mp4" in file or "avi" in file:
             safety_prefix = "_".join(dir_path.split("\\")[5:]) + "_"
             target_absolute_path = f"{safety_prefix}{file}"
+            #print(fr"Moving {dir_path}\{file} ==> {movies_target_dir}\{date_dir_timestamp}\{target_absolute_path}")
             shutil.move(fr"{dir_path}\{file}", fr"{movies_target_dir}\{date_dir_timestamp}\{target_absolute_path}")
             
 
@@ -80,6 +87,7 @@ def check_old_folders_for_file(newpath, filename):
             matches.append(True) if result else matches.append(False)
     if len(matches) > 0:
         if matches[-1]:
+            #print(fr"Deleting matched file {newpath}\{filename}")
             os.remove(fr"{newpath}\{filename}")
 
 print("Pruning existing matching files...")
@@ -93,7 +101,7 @@ for newfolder in directories:
                         
             
 print("Cleaning house...")
-root=r'X:\python\snow\extracted'            
+root=fr'{script_dir}\extracted'            
 dirlist = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
 for dir in dirlist:
     if not any([match in dir for match in do_not_check_directories]):
