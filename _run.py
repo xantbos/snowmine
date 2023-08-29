@@ -120,7 +120,7 @@ start = time.time()
 print("Running decryption script...")
 scrub_targets = ["Blueprints", "Game_Effects", "Game_Environment", "Game_Maps", "Game_Materials", "Game_Plot", "Game_Props", "Game_Script", "App_PluginEngine", "Wwise"]
 target_files = [x for x in changed_files if not any([match in x for match in scrub_targets])]
-print(f"Trimmed out {len(working_files) - len(target_files)} files based on scrub targets...")
+print(f"Trimmed out {len(changed_files) - len(target_files)} files based on scrub targets...")
 cFile = 0
 for file in target_files:
     cFile += 1
